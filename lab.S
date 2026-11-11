@@ -1,3 +1,4 @@
+
 ######################################################
 # Lab 9 template file
 ######################################################
@@ -30,8 +31,22 @@ asm_strlen:
     **/   
 
     /* Enter your code after this comment */
-    
-    
+    beq a0, x0, strlen_zero
+    li t0, 0
+
+strlen_loop:
+    lb t1, 0(a0)
+    beq t1, x0, strlen_done
+    addi t0, t0, 1
+    addi a0, a0, 1
+    jal x0, strlen_loop
+
+strlen_done:
+    add a0, t0, x0
+    ret
+
+strlen_zero:
+    li a0, 0
     /* Enter your code above this comment */
     ret
 
@@ -45,8 +60,41 @@ asm_fib:
      **/
 
     /* Enter your code after this comment */
-    
+    beq a0, x0, fib_done
+    beq a1, x0, fib_done
 
+    li t0, 0
+    li t1, 0
+    li t2, 1
+
+fib_loop:
+    bgeu t0, a1, fib_done
+
+    slli t4, t0, 2
+    add t5, a0, t4
+
+    beq t0, x0, fib_case0
+    li t6, 1
+    beq t0, t6, fib_case1
+
+    add t6, t1, t2
+    add t1, t2, x0
+    add t2, t6, x0
+    sw t2, 0(t5)
+    addi t0, t0, 1
+    jal x0, fib_loop
+
+fib_case0:
+    sw t1, 0(t5)
+    addi t0, t0, 1
+    jal x0, fib_loop
+
+fib_case1:
+    sw t2, 0(t5)
+    addi t0, t0, 1
+    jal x0, fib_loop
+
+fib_done:
     /* Enter your code above this comment */
     ret
 
@@ -59,8 +107,26 @@ asm_toUppercase:
      **/
 
     /* Enter your code after this comment */
-    
-    
+    beq a0, x0, upper_done
+
+upper_loop:
+    lb t0, 0(a0)
+    beq t0, x0, upper_done
+
+    li t1, 97
+    li t2, 123
+
+    blt t0, t1, upper_skip
+    bge t0, t2, upper_skip
+
+    addi t0, t0, -32
+    sb t0, 0(a0)
+
+upper_skip:
+    addi a0, a0, 1
+    jal x0, upper_loop
+
+upper_done:
     /* Enter your code above this comment */
     ret
 
